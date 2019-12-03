@@ -47,7 +47,7 @@
   }
   let wsUrl = wsProtocol + window.location.hostname + ':' + window.location.port + '/';
   console.log('websocket url=' + wsUrl);
-  let ws = new WebSocket(wsUrl);
+  let ws = new WebSocket('wss://webbdev.herokuapp.com');
 
   let clientId = null;
   ws.onopen = function (evt) {
@@ -181,12 +181,12 @@
       .then(() => {
         console.log('-- add local stream --');
         // ---- add local stream ---
-        const audioTrack = stream.getAudioTracks()[0];
+        
         const videoTrack = stream.getVideoTracks()[0];
 
         // Send local audio.
-        micProducer = room.createProducer(audioTrack);
-        micProducer.send(sendTransport);
+      
+      
 
         // Send local video.
         camProducer = room.createProducer(videoTrack);
@@ -333,8 +333,13 @@
       console.warn('WARN: local media ALREADY started');
       return;
     }
-
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+  const mediaConstraints =  {video:{
+width:{min:320,max:320},
+height:{min:240,max:240},
+framRate:{min:6,max:7}}}
+            
+     
+    navigator.mediaDevices.getUserMedia(mediaConstraints)
       .then((stream) => {
         localStream = stream;
         playVideo(localVideo, localStream);
@@ -377,7 +382,7 @@
   // ---- UI control ----
   function updateButtons() {
     if (room.joined) {
-      disableElement('start_video_button');
+     
       disableElement('stop_video_button');
       disableElement('connect_button');
       enabelElement('disconnect_button');
@@ -385,12 +390,12 @@
     else {
       disableElement('disconnect_button');
       if (localStream) {
-        disableElement('start_video_button');
+       
         enabelElement('stop_video_button');
         enabelElement('connect_button');
       }
       else {
-        enabelElement('start_video_button');
+        
         disableElement('stop_video_button');
         disableElement('connect_button');
       }
