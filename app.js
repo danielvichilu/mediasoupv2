@@ -83,6 +83,54 @@ function isFileExist(path) {
 }
 
 
+// ----- mediasoup ----
+const mediasoup = require('mediasoup');
+
+let server = mediasoup.Server({logLevel: 'debug'});
+server.on('close', function() {
+  console.log('====== mediasoup server closed =======');
+});
+server.on('newroom', function(room) {
+  console.log('-- mediasoup new room:' + room.id + ' --');
+});
+
+const mediaCodecs =
+[
+  {
+    kind        : "audio",
+    name        : "opus",
+    clockRate   : 48000,
+    channels    : 2,
+    parameters  :
+    {
+      useinbandfec : 1
+    }
+  },
+  {
+    kind      : "video",
+    name      : "VP8",
+    clockRate : 90000
+  },
+  {
+    kind       : "video",
+    name       : "H264",
+    clockRate  : 90000,
+    parameters :
+    {
+      "packetization-mode"      : 1,
+      "profile-level-id"        : "42e01f",
+      "level-asymmetry-allowed" : 1
+    }
+  }
+];
+
+const defaultRoom = server.Room(mediaCodecs);
+defaultRoom.on('newpeer', function(peer) {
+  console.log('====== new peer in room === name=' + peer.name);
+  peer.on('close', function(originator, appData) {
+    console.log('===== peer closed ======');
+  });
+});
 
 //defaultRoom.on('audiolevels', function(audioLevelInfos) {
 //  console.log('-- audiolevels in room ---');
