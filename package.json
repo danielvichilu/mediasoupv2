@@ -4,7 +4,7 @@
   "description": "sample for multi-party video chat for mediasoup v2",
   "main": "mediasoup_sample_v2.js",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "ip": "^1.1.5",
     "mediasoup": "^2.6.8",
     "mediasoup-client": "^2.4.9",
